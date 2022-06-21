@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html lang="ru" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>All users</title>
+</head>
+<body>
+<h2>Users</h2>
+<table>
+    <thead>
+    <tr>
+        <th>User name</th>
+        <th>Password</th>
+        <th>Operations</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${allUser}">
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.password}"></td>
+        <td><a th:href="@{user-update/{id}(id=${user.id})}">Update</a>
+            <a th:href="@{user-delete/{id}(id=${user.id})}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+<p><a href="/user-save">Create user</a></p>
+</div>
+</body>
+</html>

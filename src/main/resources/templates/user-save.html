@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Save user</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/user-save}" th:object="${user}">
+    <label for="email">Email: </label>
+    <input type="text" th:field="*{username}" id="email">
+    <br>
+    <label for="password">Password: </label>
+    <input type="text" th:field="*{password}" id="password">
+    <br>
+
+    <input type="submit" value="Create user">
+</form>
+</body>
+</html>
