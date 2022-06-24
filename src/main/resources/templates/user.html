@@ -6,27 +6,22 @@
     <title>All users</title>
 </head>
 <body>
-<h2>Users</h2>
 <table>
     <thead>
     <tr>
         <th>User name</th>
-        <th>Password</th>
+        <th>Role</th>
         <th>Operations</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user : ${allUser}">
+    <tr th:each="user : ${oneUser}">
         <td th:text="${user.username}"></td>
-        <td th:text="${user.password}"></td>
-        <td><a th:href="@{user-update/{id}(id=${user.id})}">Update</a>
-            <a th:href="@{user-delete/{id}(id=${user.id})}">Delete</a>
-        </td>
+        <td th:text="${user.roles}"></td>
+        <td><a th:href="@{user/user-update/{id}(id=${user.id})}">Update</a></td>
     </tr>
     </tbody>
 </table>
-</div>
-<p><a href="/user-save">Create user</a></p>
-</div>
+<p><a href="/login">Exit</a></p>
 </body>
 </html>
