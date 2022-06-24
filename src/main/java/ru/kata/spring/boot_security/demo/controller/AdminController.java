@@ -1,29 +1,26 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
+import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
+import java.util.Collections;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class AdminController {
 
     private final UserServiceImpl userService;
     private final RoleServiceImpl roleService;
-
-
-    @Autowired
-    public AdminController(UserServiceImpl userService, RoleServiceImpl roleService) {
-        this.userService = userService;
-        this.roleService = roleService;
-    }
-
+    private final UserRepository userRepository;
 
     @GetMapping("/admin")
     public String showAllUsers(Model model) {
@@ -39,6 +36,15 @@ public class AdminController {
 
     @PostMapping("/admin/user-save")
     public String saveUser(User user) {
+        User userFromDB = userRepository.findByUsername(user.getUsername());
+
+        if (userFromDB != null) {
+            return "redirect:/admin";
+        }
+
+        if (user.getRoles() == null) {
+            user.setRoles(Collections.singleton(new Role(2L)));
+        }
         userService.saveUser(user);
         return "redirect:/admin";
     }
@@ -51,14 +57,19 @@ public class AdminController {
 
     @GetMapping("/admin/user-update/{id}")
     public String updateUserForm(@PathVariable("id") Long id, Model model) {
-        User users = userService.findById(id);
-        users.setRoles(roleService.gelAllRoles());
-        model.addAttribute("user", users);
+        model.addAttribute("roles", roleService.gelAllRoles());
+        model.addAttribute("user", userService.findById(id));
         return "admin-update";
     }
 
     @PostMapping("/admin/user-update")
-    public String updateUsers(@ModelAttribute("user") User user) {
+    public String updateUsers(@ModelAttribute("user") User user,
+                              @RequestParam(value = "nameRoles", required = false) String roles) {
+        if(roles == null){
+            user.setRoles(roleService.getRoleByName("ROLE_USER"));
+        } else {
+            user.setRoles(roleService.getRoleByName(roles));
+        }
         userService.saveUser(user);
         return "redirect:/admin";
     }

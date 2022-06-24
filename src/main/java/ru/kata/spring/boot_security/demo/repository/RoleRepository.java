@@ -8,4 +8,5 @@ import ru.kata.spring.boot_security.demo.entity.User;
 import java.util.Set;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
+    Set<Role> findByName(String name);
 }

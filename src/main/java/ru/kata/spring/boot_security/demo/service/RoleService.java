@@ -11,4 +11,5 @@ public interface RoleService {
     void addRole(Role role);
 
     List<Role> listRole();
+    Set<Role> getRoleByName(String roleName);
 }
