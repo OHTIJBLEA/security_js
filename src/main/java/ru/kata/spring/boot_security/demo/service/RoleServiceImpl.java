@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class RoleServiceImpl implements RoleService{
+public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 
@@ -23,20 +23,11 @@ public class RoleServiceImpl implements RoleService{
     }
 
     @Override
-    public Role getRoleById(Long id) {
-        return roleRepository.getById(id);
-    }
-
-    @Override
-    public void addRole(Role role) {
-        roleRepository.save(role);
-    }
-    @Override
-    public List<Role> listRole() {
-        return roleRepository.findAll();
-    }
-    @Override
-    public Set<Role> getRoleByName(String roleName) {
-        return roleRepository.findByName(roleName);
+    public Set<Role> getRoleByName(String[] roleName) {
+        Set<Role> roleSet = new HashSet<>();
+        for (String role : roleName) {
+            roleSet.add(roleRepository.findByName(role));
+        }
+        return roleSet;
     }
 }

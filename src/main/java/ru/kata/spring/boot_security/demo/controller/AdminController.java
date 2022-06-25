@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
+import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,6 +23,12 @@ public class AdminController {
     private final UserServiceImpl userService;
     private final RoleServiceImpl roleService;
     private final UserRepository userRepository;
+
+    @PostConstruct
+    public void addTestUsers() {
+        User newAdmin = new User("admin", "admin", roleService.getRoleByName(new String[]{"ROLE_ADMIN"}));
+        userService.saveUser(newAdmin);
+    }
 
     @GetMapping("/admin")
     public String showAllUsers(Model model) {
@@ -64,9 +72,9 @@ public class AdminController {
 
     @PostMapping("/admin/user-update")
     public String updateUsers(@ModelAttribute("user") User user,
-                              @RequestParam(value = "nameRoles", required = false) String roles) {
-        if(roles == null){
-            user.setRoles(roleService.getRoleByName("ROLE_USER"));
+                              @RequestParam(value = "nameRoles", required = false) String[] roles) {
+        if (roles == null) {
+            user.setRoles(roleService.getRoleByName(new String[]{"ROLE_USER"}));
         } else {
             user.setRoles(roleService.getRoleByName(roles));
         }
