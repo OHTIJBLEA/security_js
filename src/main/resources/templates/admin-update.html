@@ -15,10 +15,13 @@
     <label for="password">Password</label>
     <input type="password" th:field="*{password}" id="password" placeholder="password">
     <br/>
-
-<!--    <input type="checkbox" th:field="*{listRole}" id="listRole">USER<br>-->
-<!--    <br>-->
-<input type="submit" value="Update user">
+    <select name="nameRoles" multiple size="2">
+        <option th:each="role : ${roles}"
+                th:value="${role.name}"
+                th:text="${role.getName()}">
+        </option>
+    </select>
+    <input type="submit" value="Update user">
 </form>
 </body>
 </html>
