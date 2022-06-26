@@ -4,12 +4,14 @@
 <head>
     <meta charset="UTF-8"/>
     <title>All users</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<h2>Users</h2>
+<h2>Admin panel</h2>
 <table>
     <thead>
     <tr>
+        <th>ID</th>
         <th>User name</th>
         <th>Role</th>
         <th>Operations</th>
@@ -17,6 +19,7 @@
     </thead>
     <tbody>
     <tr th:each="user : ${allUser}">
+        <td th:text="${user.id}"></td>
         <td th:text="${user.username}"></td>
         <td th:text="${user.roles}"></td>
         <td><a th:href="@{admin/user-update/{id}(id=${user.id})}">Update</a>
@@ -24,6 +27,7 @@
         </td>
     </tr>
     </tbody>
+
 </table>
 </div>
 <p><a href="admin/user-save">Create user</a></p>
