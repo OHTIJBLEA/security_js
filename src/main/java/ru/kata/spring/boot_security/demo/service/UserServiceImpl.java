@@ -33,12 +33,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+        UserDetails userDetails = userRepository.findByUsername(username);
+        if (userDetails == null) {
+            throw new UsernameNotFoundException("User with this " + username + " User Name not found");
         }
-        return user;
+        return userDetails;
     }
 
     public User findUserById(Long userId) {
@@ -46,19 +45,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userFromDb.orElse(new User());
     }
 
-    public boolean saveUser(User user) {
-//        User userFromDB = userRepository.findByUsername(user.getUsername());
-//
-//        if (userFromDB != null) {
-//            return false;
-//        }
+    public void saveUser(User user) {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userRepository.save(user);
-        return true;
     }
 
     @Override
-    public Long getUsernameById(String name) {
+    public Long getUsernameByName(String name) {
         User user = userRepository.findByUsername(name);
         return user.getId();
     }
