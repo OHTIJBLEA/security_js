@@ -48,12 +48,6 @@ public class AdminController {
 
     @PostMapping("/admin/user-save")
     public String saveUser(User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
-
-        if (userFromDB != null) {
-            return "redirect:/admin";
-        }
-
         if (user.getRoles() == null) {
             user.setRoles(Collections.singleton(new Role(2L)));
         }
@@ -61,7 +55,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/user-delete/{id}")
+    @DeleteMapping("/admin/user-delete/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
         userService.deleteById(id);
         return "redirect:/admin";
@@ -75,14 +69,13 @@ public class AdminController {
     }
 
     @PostMapping("/admin/user-update")
-    public String updateUsers(@ModelAttribute("user") User user,
-                              @RequestParam(value = "nameRoles", required = false) String[] roles) {
+    public String updateUsers(@ModelAttribute("user") User user, @RequestParam(value = "nameRoles", required = false) String[] roles) {
         if (roles == null) {
             user.setRoles(roleService.getRoleByName(new String[]{"ROLE_USER"}));
         } else {
             user.setRoles(roleService.getRoleByName(roles));
         }
-        userService.saveUser(user);
+        userService.updateUser(user);
         return "redirect:/admin";
     }
 }

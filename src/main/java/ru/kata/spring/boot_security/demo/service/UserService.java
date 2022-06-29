@@ -12,6 +12,7 @@ public interface UserService {
 
     UserDetails loadUserByUsername(String username);
     User findUserById(Long userId);
-    void saveUser(User user);
+    boolean saveUser(User user);
+    boolean updateUser(User user);
     Long getUsernameByName(String name);
 }

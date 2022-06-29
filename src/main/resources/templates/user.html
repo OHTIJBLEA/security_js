@@ -22,10 +22,14 @@
             <span th:text="${role.getName()}"></span>
         </span>
         </td>
-        <td><a th:href="@{user/user-update/{id}(id=${user.id})}">Update</a></td>
+        <td><a th:href="@{user/user-update/{id}(id=${user.id})}">
+            <input type="submit" value="Update"/></a>
+        </td>
     </tr>
     </tbody>
 </table>
-<p><a href="/login">Exit</a></p>
+<a th:href="@{/login}">
+    <input type="submit" value="Exit"/>
+</a>
 </body>
 </html>

@@ -20,7 +20,6 @@ public class UserController {
     @GetMapping("/user")
     public String showUser(Principal principal, Model model) {
         User user = (User) userService.loadUserByUsername(principal.getName());
-        User user1 =  userService.findUserById(userService.getUsernameByName(principal.getName()));
         model.addAttribute("oneUser", user);
         return "/user";
 
@@ -37,7 +36,7 @@ public class UserController {
         User userDb = userService.findUserById(userService.getUsernameByName(principal.getName()));
         Set<Role> roles = userDb.getRoles();
         user.setRoles(roleService.getRoleByName(roles.stream().map(role-> role.getName()).toArray(String[]::new)));
-        userService.saveUser(user);
+        userService.updateUser(user);
         return "redirect:/user";
     }
 }

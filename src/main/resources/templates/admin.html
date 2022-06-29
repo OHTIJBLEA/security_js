@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8"/>
     <title>All users</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
 <h2>Admin panel</h2>
@@ -26,16 +25,26 @@
             <span th:text="${role.getName()}"></span>
         </span>
         </td>
-        <td><a th:href="@{admin/user-update/{id}(id=${user.id})}">Update</a>
-            <a th:href="@{admin/user-delete/{id}(id=${user.id})}">Delete</a>
+        <td><a th:href="@{admin/user-update/{id}(id=${user.id})}">
+            <input type="submit" value="Update"/></a>
+        </td>
+        <td>
+            <form th:method="DELETE" th:action="@{admin/user-delete/{id}(id=${user.getId()})}">
+                <input type="submit" value="Delete"/>
+            </form>
         </td>
     </tr>
     </tbody>
 
 </table>
 </div>
-<p><a href="admin/user-save">Create user</a></p>
-<p><a href="/login">Exit</a></p>
+<a th:href="@{admin/user-save}">
+    <input type="submit" value="Create user"/>
+</a>
+<br>
+<a th:href="@{/login}">
+    <input type="submit" value="Exit"/>
+</a>
 </div>
 </body>
 </html>

@@ -45,9 +45,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userFromDb.orElse(new User());
     }
 
-    public void saveUser(User user) {
+    public boolean saveUser(User user) {
+        User userFromDB = userRepository.findByUsername(user.getUsername());
+        if (userFromDB != null) {
+            return false;
+        }
+        if (user.getUsername().equals("") | user.getPassword().equals("")) {
+            return false;
+        }
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean updateUser(User user) {
+        if (user.getUsername().equals("") | user.getPassword().equals("")) {
+            return false;
+        }
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        userRepository.save(user);
+        return true;
     }
 
     @Override
@@ -57,7 +75,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
     public boolean saveUserTest(User user) {
         User userFromDB = userRepository.findByUsername(user.getUsername());
-
         if (userFromDB != null) {
             return false;
         }
