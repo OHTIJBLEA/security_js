@@ -5,7 +5,6 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Data
@@ -23,6 +22,9 @@ public class Role implements GrantedAuthority {
     public Role(Long id) {
         this.id = id;
     }
+    public Role(String name) {
+        this.name = name;
+    }
 
     public Role(Long id, String name) {
         this.id = id;
@@ -36,6 +38,6 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return getName();
+        return name;
     }
 }

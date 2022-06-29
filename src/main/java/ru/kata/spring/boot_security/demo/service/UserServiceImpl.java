@@ -6,15 +6,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -38,12 +33,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+        UserDetails userDetails = userRepository.findByUsername(username);
+        if (userDetails == null) {
+            throw new UsernameNotFoundException("User with this " + username + " User Name not found");
         }
-        return user;
+        return userDetails;
     }
 
     public User findUserById(Long userId) {
@@ -52,19 +46,40 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     public boolean saveUser(User user) {
-//        User userFromDB = userRepository.findByUsername(user.getUsername());
-//
-//        if (userFromDB.getUsername().equals(user.getUsername())) {
-//            return false;
-//        }
+        User userFromDB = userRepository.findByUsername(user.getUsername());
+        if (userFromDB != null) {
+            return false;
+        }
+        if (user.getUsername().equals("") | user.getPassword().equals("")) {
+            return false;
+        }
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userRepository.save(user);
         return true;
     }
 
     @Override
-    public Long getUsernameById(String name) {
+    public boolean updateUser(User user) {
+        if (user.getUsername().equals("") | user.getPassword().equals("")) {
+            return false;
+        }
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public Long getUsernameByName(String name) {
         User user = userRepository.findByUsername(name);
         return user.getId();
+    }
+    public boolean saveUserTest(User user) {
+        User userFromDB = userRepository.findByUsername(user.getUsername());
+        if (userFromDB != null) {
+            return false;
+        }
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        userRepository.save(user);
+        return true;
     }
 }

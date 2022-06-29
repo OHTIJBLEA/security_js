@@ -1,13 +1,12 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
@@ -23,11 +22,16 @@ public class AdminController {
     private final UserServiceImpl userService;
     private final RoleServiceImpl roleService;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @PostConstruct
     public void addTestUsers() {
+        roleRepository.save(new Role(1L, "ROLE_ADMIN"));
+        roleRepository.save(new Role(2L, "ROLE_USER"));
         User newAdmin = new User("admin", "admin", roleService.getRoleByName(new String[]{"ROLE_ADMIN"}));
-        userService.saveUser(newAdmin);
+        userService.saveUserTest(newAdmin);
+        User newUser = new User("user", "user", roleService.getRoleByName(new String[]{"ROLE_USER"}));
+        userService.saveUserTest(newUser);
     }
 
     @GetMapping("/admin")
@@ -44,12 +48,6 @@ public class AdminController {
 
     @PostMapping("/admin/user-save")
     public String saveUser(User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
-
-        if (userFromDB != null) {
-            return "redirect:/admin";
-        }
-
         if (user.getRoles() == null) {
             user.setRoles(Collections.singleton(new Role(2L)));
         }
@@ -57,7 +55,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/user-delete/{id}")
+    @DeleteMapping("/admin/user-delete/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
         userService.deleteById(id);
         return "redirect:/admin";
@@ -71,14 +69,13 @@ public class AdminController {
     }
 
     @PostMapping("/admin/user-update")
-    public String updateUsers(@ModelAttribute("user") User user,
-                              @RequestParam(value = "nameRoles", required = false) String[] roles) {
+    public String updateUsers(@ModelAttribute("user") User user, @RequestParam(value = "nameRoles", required = false) String[] roles) {
         if (roles == null) {
             user.setRoles(roleService.getRoleByName(new String[]{"ROLE_USER"}));
         } else {
             user.setRoles(roleService.getRoleByName(roles));
         }
-        userService.saveUser(user);
+        userService.updateUser(user);
         return "redirect:/admin";
     }
 }

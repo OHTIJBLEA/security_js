@@ -65,11 +65,19 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(roles, user.roles);
+        return username.equals(user.username);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, username, password, roles);
+    }
+
+    @Override
+    public String toString() {
+        return "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles.toString();
     }
 }
