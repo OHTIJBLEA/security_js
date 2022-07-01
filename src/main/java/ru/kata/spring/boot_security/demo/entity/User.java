@@ -18,7 +18,11 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
+    private String firstName;
+    private String lastName;
+    private byte age;
     private String password;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -35,6 +39,25 @@ public class User implements UserDetails {
         this.password = password;
         this.roles = roles;
     }
+
+    public User(String username, String firstName, String lastName, byte age, String password, Set<Role> roles) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    public String getStringView() {
+        StringBuilder res = new StringBuilder();
+        res.append(this.username).append(" with roles: ");
+        for (Role role : roles) {
+            res.append(role.getName().substring(5)).append(" ");
+        }
+        return res.toString();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
