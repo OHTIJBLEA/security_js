@@ -23,7 +23,6 @@ public class User implements UserDetails {
     private byte age;
     private String password;
 
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
