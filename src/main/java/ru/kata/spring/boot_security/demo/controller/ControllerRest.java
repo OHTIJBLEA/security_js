@@ -20,7 +20,7 @@ public class ControllerRest {
 
     @GetMapping("/admin")
     public List<User> allUsers() {
-        List<User> users = userService.findAll();
+        List<User> users = userService.findAllUsers();
         return users;
     }
 
@@ -44,7 +44,7 @@ public class ControllerRest {
 
     @GetMapping("/users/{id}")
     public User getUserById(@PathVariable("id") long id) {
-        return userService.findById(id);
+        return userService.findUserById(id);
     }
 
     @PatchMapping("/admin/edit")
@@ -55,6 +55,6 @@ public class ControllerRest {
 
     @DeleteMapping("/admin/user/{id}")
     public void deleteUserById(@PathVariable("id") long id) {
-        userService.deleteById(id);
+        userService.deleteUserById(id);
     }
 }

@@ -6,26 +6,30 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserDetailsService, UserService {
     private final UserRepository userRepository;
-    public User findById(Long id) {
+    private final RoleRepository roleRepository;
+    private final RoleService roleService;
+    public User findUserById(Long id) {
         return userRepository.findById(id).get();
     }
 
-    public List<User> findAll() {
+    public List<User> findAllUsers() {
         return userRepository.findAll();
     }
 
 
-    public void deleteById(Long id) {
+    public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
 
@@ -36,11 +40,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             throw new UsernameNotFoundException("User with this " + username + " User Name not found");
         }
         return userDetails;
-    }
-
-    public User findUserById(Long userId) {
-        Optional<User> userFromDb = userRepository.findById(userId);
-        return userFromDb.orElse(new User());
     }
 
     public boolean saveUser(User user) {
@@ -80,5 +79,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userRepository.save(user);
         return true;
+    }
+
+    @PostConstruct
+    public void addTestUsers() {
+        roleRepository.save(new Role(1L, "ROLE_ADMIN"));
+        roleRepository.save(new Role(2L, "ROLE_USER"));
+        User newAdmin = new User("admin", "admin", "admin", (byte) 18, "admin", roleService.getListRoleByName(new String[]{"ROLE_ADMIN"}));
+        saveUserTest(newAdmin);
+        User newUser = new User("user", "user", "user", (byte) 18, "user", roleService.getListRoleByName(new String[]{"ROLE_USER"}));
+        saveUserTest(newUser);
     }
 }

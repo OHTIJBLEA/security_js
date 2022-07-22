@@ -28,7 +28,7 @@ public class Admin {
 
     @GetMapping(value = "/admin")
     public String listUsers(Principal principal, Model model) {
-        List<User> users = userService.findAll();
+        List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
         model.addAttribute("principal", userService.loadUserByUsername(principal.getName()));
         model.addAttribute("newUser", new User());
