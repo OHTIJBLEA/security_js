@@ -16,7 +16,7 @@ import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
-public class Admin {
+public class AdminController {
     private final RoleService roleService;
     private final UserService userService;
     private final RoleRepository roleRepository;
