@@ -12,7 +12,9 @@ import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import javax.annotation.PostConstruct;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -85,9 +87,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public void addTestUsers() {
         roleRepository.save(new Role(1L, "ROLE_ADMIN"));
         roleRepository.save(new Role(2L, "ROLE_USER"));
-        User newAdmin = new User("admin", "admin", "admin", (byte) 18, "admin", roleService.getListRoleByName(new String[]{"ROLE_ADMIN"}));
+        Set<Role> userRole = new HashSet<>();
+        Set<Role> adminRole = new HashSet<>();
+        userRole.add(roleService.getRoleByName("ROLE_USER"));
+        adminRole.add(roleService.getRoleByName("ROLE_ADMIN"));
+        User newAdmin = new User("admin", "admin", "admin", (byte) 18, "admin", adminRole);
         saveUserTest(newAdmin);
-        User newUser = new User("user", "user", "user", (byte) 18, "user", roleService.getListRoleByName(new String[]{"ROLE_USER"}));
+        User newUser = new User("user", "user", "user", (byte) 18, "user", userRole);
         saveUserTest(newUser);
     }
 }

@@ -234,7 +234,7 @@ $(document).on('click', '#createUser', async function () {
     });
 
     const json = await response.json();
-    $('#users-table-tab').click();
+    $('.nav-tabs a[href="#nav-home"]').tab('show');
 
     await getData();
 })
